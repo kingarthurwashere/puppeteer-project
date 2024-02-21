@@ -38,7 +38,7 @@ function generateJobId ()
         // Increase navigation timeout to 60 seconds
         await page.setDefaultNavigationTimeout( 60000 );
 
-        const url = "https://www.noon.com/uae-en/thinkpad-p15s-gen-2-mobile-workstation-business-laptop-with-15-6-inch-display-core-i5-1145g7-processor-16gb-ram-512gb-ssd-nvidia-quadro-t500-graphics-windows-11-pro-broag-english-black/N70041845V/p/?o=b8d7fb490960ee3b";
+        const url = "https://www.noon.com/uae-en/thinkpad-p15-laptop-with-15-6-inch-full-hd-display-core-i7-processer-16gb-ram-512gb-ssd-intel-uhd-graphics-windows-10-pro-glossy-international-version-glossy-glossy-black/N43502641A/p/?o=a9b6334e0ab9a06f";
         await page.goto( url );
 
         let product = {
