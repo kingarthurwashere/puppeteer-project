@@ -13,13 +13,12 @@ function generateJobId ()
     let browser;
     try
     {
-        const proxy = 'https://87.247.186.157:3128';
+        const proxy = 'ae-pr.oxylabs.io:40000';
         const username = 'kairezi';
         const password = '#Storeflex263!';
-        const country = 'AE';
 
         const launchOptions = {
-            args: [ `--proxy-server=${ proxy };country=${ country }` ],
+            args: [ `--proxy-server=${ proxy }` ],
             headless: true
         };
 
