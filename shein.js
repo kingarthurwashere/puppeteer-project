@@ -13,38 +13,32 @@ function generateJobId ()
     let browser;
     try
     {
-        browser = await puppeteer.launch( {
-            headless: false,
-            defaultViewport: null,
-            userDataDir: "./tmp",
-            browserContext: "default",
-        } );
+        const proxy = 'https://87.247.186.157:3128';
+        const username = 'kairezi';
+        const password = '#Storeflex263!';
+        const country = 'AE';
 
+        const launchOptions = {
+            args: [ `--proxy-server=${ proxy };country=${ country }` ],
+            headless: true
+        };
+
+        browser = await puppeteer.launch( launchOptions );
         const page = await browser.newPage();
 
+        // Set up proxy authentication
+        await page.authenticate( {
+            username,
+            password
+        } );
+
+
         await page.setCacheEnabled( false );
-
-        // Set the location to the United Arab Emirates (UAE)
-        await page.setGeolocation( { latitude: 24.4539, longitude: 54.3773 } );
-
-        // Set English language
-        await page.setExtraHTTPHeaders( {
-            'Accept-Currency': 'AED'
-        } );
-
-
-        const client = await page.target().createCDPSession();
-
-        await client.send( 'Emulation.setGeolocationOverride', {
-            accuracy: 100,
-            latitude: 24.42312,
-            longitude: 105.75868,
-        } );
 
         // Increase navigation timeout to 60 seconds
         await page.setDefaultNavigationTimeout( 60000 );
 
-        const url = "https://ar.shein.com/SHEIN-Young-Girl-Shawl-Collar-Fuzzy-Trim-Jacket-Cami-Top-Skirt-p-24049544-cat-2117.html?src_identifier=on%3DIMAGE_COMPONENT%60cn%3Dcat%60hz%3DhotZone_2%60ps%3D5_2%60jc%3Dreal_2031&src_module=All&src_tab_page_id=page_home1708526026412&mallCode=1&imgRatio=3-4";
+        const url = "https://www.shein.com/Manfinity-Hypemode-Men-s-Random-Tie-Dyeing-Gradient-Letter-Print-Short-Sleeve-T-Shirt-p-28790114-cat-1980.html?src_identifier=on%3DIMAGE_COMPONENT%60cn%3Dshopbycate%60hz%3DhotZone_2%60ps%3D4_2%60jc%3Dreal_2026&src_module=All&src_tab_page_id=page_home1708802441498&mallCode=1&imgRatio=3-4";
         await page.goto( url );
 
         let product = {
@@ -116,7 +110,7 @@ function generateJobId ()
         {
             product.currency = await page.evaluate( () =>
             {
-                const currencyElement = document.querySelector( 'div.product-intro__head-mainprice div.original span' );
+                const currencyElement = document.querySelector( 'div.original.from span' );
                 if ( currencyElement )
                 {
                     const currencyText = currencyElement.textContent.trim();
