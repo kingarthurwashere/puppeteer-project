@@ -14,22 +14,24 @@ function generateJobId ()
     try
     {
         browser = await puppeteer.launch( {
-            headless: false,
+            headless: true,
             defaultViewport: null,
             userDataDir: "./tmp",
             browserContext: "default",
         } );
-
         const page = await browser.newPage();
 
-
         await page.setCacheEnabled( false );
+        console.log( "Browser cache disabled." );
 
-        // Increase navigation timeout to 60 seconds
-        await page.setDefaultNavigationTimeout( 60000 );
-
-        const url = "https://www.aliexpress.com/item/1005006364469534.html?spm=a2g0o.home.pcJustForYou.28.650c76dbHKX95z&gps-id=pcJustForYou&scm=1007.13562.333647.0&scm_id=1007.13562.333647.0&scm-url=1007.13562.333647.0&pvid=8ecee96c-0cfd-443a-9e2f-2bb95d1041eb&_t=gps-id:pcJustForYou,scm-url:1007.13562.333647.0,pvid:8ecee96c-0cfd-443a-9e2f-2bb95d1041eb,tpp_buckets:668%232846%238110%231995&pdp_npi=4%40dis%21AED%2164.28%217.81%21%21%21125.35%2115.22%21%402103146c17087992227476886e77c8%2112000036906483026%21rec%21AE%21%21AB&utparam-url=scene%3ApcJustForYou%7Cquery_from%3A";
+        const url = "https://www.aliexpress.com/item/1005005220784707.html";
         await page.goto( url );
+
+        // Scroll down the page
+        await page.evaluate( () =>
+        {
+            window.scrollBy( 0, window.innerHeight ); // Scrolls down by the height of the viewport
+        } );
 
         let product = {
             jobId: generateJobId(),
@@ -40,6 +42,8 @@ function generateJobId ()
             currency: "Null",
             description: "Null",
             shipping_price: "Null",
+            specifications: "Null",
+            highlights: "Null",
             description_images: []
         };
 
@@ -107,19 +111,6 @@ function generateJobId ()
 
         try
         {
-            product.description = await page.evaluate( () =>
-            {
-                const descriptionElements = document.querySelectorAll( 'div.description--origin.-part--SsZJoGC span' );
-                return Array.from( descriptionElements, element => element.textContent.trim() ).join( "\n" );
-            } );
-        } catch ( error )
-        {
-            console.error( "Error occurred while extracting description:", error );
-        }
-
-
-        try
-        {
             product.shipping_price = await page.evaluate( () =>
             {
                 const shippingPriceElement = document.querySelector( 'div[data-pl="product-shipping"] div.dynamic-shipping div.dynamic-shipping-line.dynamic-shipping-titleLayout span strong' );
@@ -139,7 +130,6 @@ function generateJobId ()
         {
             console.error( "Error occurred while extracting Shipping Price:", error );
         }
-
 
         try
         {
@@ -163,10 +153,43 @@ function generateJobId ()
             } );
         } catch ( error )
         {
-            console.error(
-                "Error occurred while extracting description images:",
-                error
-            );
+            console.error( "Error occurred while extracting description images:", error );
+        }
+
+        try
+        {
+            product.description = await page.evaluate( () =>
+            {
+                const descriptionElement = document.querySelector( '.specification--list--fiWsSyv' );
+                return descriptionElement ? descriptionElement.textContent.trim() : 'Not found';
+            } );
+        } catch ( error )
+        {
+            console.error( "Error occurred while extracting description:", error );
+        }
+
+        try
+        {
+            product.specifications = await page.evaluate( () =>
+            {
+                const specificationsElement = document.querySelector( '.description--origin-part--SsZJoGC' );
+                return specificationsElement ? specificationsElement.textContent.trim() : 'Not found';
+            } );
+        } catch ( error )
+        {
+            console.error( "Error occurred while extracting specifications:", error );
+        }
+
+        try
+        {
+            product.highlights = await page.evaluate( () =>
+            {
+                const highlightsElement = document.querySelector( 'div.product-detail-tab-content' );
+                return highlightsElement ? highlightsElement.textContent.trim() : 'Not found';
+            } );
+        } catch ( error )
+        {
+            console.error( "Error occurred while extracting highlights:", error );
         }
 
         console.log( JSON.stringify( product, null, 2 ) );

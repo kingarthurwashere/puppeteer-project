@@ -24,17 +24,6 @@ function generateJobId ()
 
         await page.setCacheEnabled( false );
 
-        // Set the location to the United Arab Emirates (UAE)
-        await page.setGeolocation( { latitude: 24.4539, longitude: 54.3773 } );
-
-        const client = await page.target().createCDPSession();
-
-        await client.send( 'Emulation.setGeolocationOverride', {
-            accuracy: 100,
-            latitude: 24.42312,
-            longitude: 105.75868,
-        } );
-
         // Increase navigation timeout to 60 seconds
         await page.setDefaultNavigationTimeout( 60000 );
 
@@ -60,9 +49,7 @@ function generateJobId ()
         {
             product.title = await page.evaluate( () =>
             {
-                const titleElement = document.querySelector(
-                    '.sc-320c5568-18'
-                );
+                const titleElement = document.querySelector( '.sc-90850211-19.fIMVLF' );
                 return titleElement ? titleElement.textContent.trim() : "Not found";
             } );
         } catch ( error )
@@ -74,13 +61,15 @@ function generateJobId ()
         {
             product.brand = await page.evaluate( () =>
             {
-                const brandElement = document.querySelector( 'div.sc-320c5568-17.jvojBZ' );
+                const brandElement = document.querySelector( '.sc-90850211-18.drjWKA' );
                 return brandElement ? brandElement.textContent.trim() : "Not found";
             } );
         } catch ( error )
         {
             console.error( "Error occurred while extracting brand:", error );
         }
+
+
 
         try
         {

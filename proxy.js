@@ -3,12 +3,12 @@ const puppeteer = require( 'puppeteer' );
 {
     const browser = await puppeteer.launch( {
         headless: false,
-        args: [ '--proxy-server=pr.oxylabs.io:7777' ]
+        args: [ 'pr.oxylabs.io:7777' ]
     } );
     const page = await browser.newPage();
     await page.authenticate( {
-        username: 'kairezi',
-        password: '#Storeflex263'
+        username: 'Dxbrunners',
+        password: 'Mikhman_2024'
     } );
     await page.goto( 'https://ip.oxylabs.io' );
     await page.screenshot( { path: 'example.png' } );

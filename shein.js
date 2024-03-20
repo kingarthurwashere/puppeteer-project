@@ -14,8 +14,8 @@ function generateJobId ()
     try
     {
         const proxy = 'ae-pr.oxylabs.io:40000';
-        const username = 'kairezi';
-        const password = '#Storeflex263!';
+        const username = 'Dxbrunners';
+        const password = 'Mikhman_2024';
 
         const launchOptions = {
             args: [ `--proxy-server=${ proxy }` ],
@@ -35,7 +35,7 @@ function generateJobId ()
         await page.setCacheEnabled( false );
 
         // Increase navigation timeout to 60 seconds
-        await page.setDefaultNavigationTimeout( 60000 );
+        await page.setDefaultNavigationTimeout( 120000 );
 
         const url = "https://www.shein.com/Manfinity-Hypemode-Men-s-Random-Tie-Dyeing-Gradient-Letter-Print-Short-Sleeve-T-Shirt-p-28790114-cat-1980.html?src_identifier=on%3DIMAGE_COMPONENT%60cn%3Dshopbycate%60hz%3DhotZone_2%60ps%3D4_2%60jc%3Dreal_2026&src_module=All&src_tab_page_id=page_home1708802441498&mallCode=1&imgRatio=3-4";
         await page.goto( url );
@@ -59,7 +59,7 @@ function generateJobId ()
         {
             product.title = await page.evaluate( () =>
             {
-                const titleElement = document.querySelector( 'h1.product-intro__head-name' );
+                const titleElement = document.querySelector( 'h1.product-title' );
                 return titleElement ? titleElement.textContent.trim() : "Not found";
             } );
         } catch ( error )
@@ -71,13 +71,14 @@ function generateJobId ()
         {
             product.brand = await page.evaluate( () =>
             {
-                const brandElement = document.querySelector( 'div.sc-320c5568-17.jvojBZ' );
+                const brandElement = document.querySelector( 'div[data-qa="pdp-brand-N52103168A"]' );
                 return brandElement ? brandElement.textContent.trim() : "Not found";
             } );
         } catch ( error )
         {
             console.error( "Error occurred while extracting brand:", error );
         }
+
 
         try
         {
